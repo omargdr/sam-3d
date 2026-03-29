@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Models (ignore everything)
+checkpoints/
+
+# Data
+frame_extract/input_videos/
+frame_extract/output_frames/
+
+# Outputs
+outputs/
+frame_extract/outputs/
+
+# Cache
+.cache/
+*.log
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
