@@ -43,7 +43,7 @@ MHR_PATH = os.path.join(
     PROJECT_ROOT, "checkpoints", "sam-3d-body-dinov3", "assets", "mhr_model.pt"
 )
 
-DEVICE = "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 INFERENCE_TYPE = "body"
 DETECTOR_NAME = "vitdet"
 DETECTOR_INPUT_SIZE = 1024

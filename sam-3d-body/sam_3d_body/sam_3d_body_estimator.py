@@ -28,8 +28,8 @@ class SAM3DBodyEstimator:
         human_segmentor=None,
         fov_estimator=None,
     ):
-        self.device = next(sam_3d_body_model.parameters()).device
-        self.model, self.cfg = sam_3d_body_model, model_cfg
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model, self.cfg = sam_3d_body_model.to(self.device), model_cfg
         self.detector = human_detector
         self.sam = human_segmentor
         self.fov_estimator = fov_estimator
@@ -95,7 +95,8 @@ class SAM3DBodyEstimator:
         self.image_embeddings = None
         self.output = None
         self.prev_prompt = []
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         if type(img) == str:
             img = load_image(img, backend="cv2", image_format="bgr")
