@@ -74,6 +74,6 @@ def extract_frames_16fps(video_path, output_folder, target_fps=16):
     print(f"Saved {saved_count} frames to {output_dir}")
 
 if __name__ == "__main__":
-    video_path = "test_n1.mp4"
+    video_path = "walking.mov"
     output_folder = video_path.split('.')[0]
     extract_frames_16fps(video_path, output_folder)
