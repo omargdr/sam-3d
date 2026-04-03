@@ -3,22 +3,24 @@ import shutil
 
 from frame_extract import extract_frames_16fps
 
+FRAME_EXTENSION = ".jpg"
 
-def numeric_png_sort_key(filename: str) -> int:
+
+def numeric_frame_sort_key(filename: str) -> int:
     name, ext = os.path.splitext(filename)
-    if ext.lower() != ".png":
+    if ext.lower() != FRAME_EXTENSION:
         return float("inf")
     return int(name)
 
 
 def calibrate_extracted_frames(output_dir: str, start_frame_number: int, target_fps: int = 16) -> None:
-    png_files = [f for f in os.listdir(output_dir) if f.lower().endswith(".png")]
-    png_files = sorted(png_files, key=numeric_png_sort_key)
+    frame_files = [f for f in os.listdir(output_dir) if f.lower().endswith(FRAME_EXTENSION)]
+    frame_files = sorted(frame_files, key=numeric_frame_sort_key)
 
-    if not png_files:
-        raise ValueError(f"No PNG files found in {output_dir}")
+    if not frame_files:
+        raise ValueError(f"No {FRAME_EXTENSION.upper()} files found in {output_dir}")
 
-    frame_numbers = [numeric_png_sort_key(f) for f in png_files]
+    frame_numbers = [numeric_frame_sort_key(f) for f in frame_files]
 
     if start_frame_number not in frame_numbers:
         raise ValueError(
@@ -26,7 +28,7 @@ def calibrate_extracted_frames(output_dir: str, start_frame_number: int, target_
             f"Available range: {frame_numbers[0]} to {frame_numbers[-1]}"
         )
 
-    selected_files = [f for f in png_files if numeric_png_sort_key(f) >= start_frame_number]
+    selected_files = [f for f in frame_files if numeric_frame_sort_key(f) >= start_frame_number]
 
     ms_per_frame = 1000.0 / target_fps
 
@@ -34,15 +36,15 @@ def calibrate_extracted_frames(output_dir: str, start_frame_number: int, target_
     os.makedirs(temp_dir, exist_ok=True)
 
     for f in selected_files:
-        old_idx = numeric_png_sort_key(f)
+        old_idx = numeric_frame_sort_key(f)
         new_idx = old_idx - start_frame_number
         timestamp_ms = int(round(new_idx * ms_per_frame))
 
         src = os.path.join(output_dir, f)
-        dst = os.path.join(temp_dir, f"{timestamp_ms}.png")
+        dst = os.path.join(temp_dir, f"{timestamp_ms}{FRAME_EXTENSION}")
         shutil.copy2(src, dst)
 
-    for f in png_files:
+    for f in frame_files:
         os.remove(os.path.join(output_dir, f))
 
     for f in os.listdir(temp_dir):
@@ -51,11 +53,11 @@ def calibrate_extracted_frames(output_dir: str, start_frame_number: int, target_
     os.rmdir(temp_dir)
 
     print(f"Calibration done in: {output_dir}")
-    print(f"First kept frame: {start_frame_number} -> 0.png")
+    print(f"First kept frame: {start_frame_number} -> 0{FRAME_EXTENSION}")
 
 
 def main():
-    video_path = "walking.mov"
+    video_path = "brahim1.mov"
     target_fps = 16
 
     output_folder = os.path.splitext(video_path)[0]

@@ -63,8 +63,8 @@ def extract_frames_16fps(video_path, output_folder, target_fps=16):
         if frame_count % step == 0:
             # ts = compute_timestamp_ms(frame_count, original_fps, offset_ms)
             ts = int(frame_count/step)  # Use frame index as timestamp for simplicity
-            filename = os.path.join(output_dir, f"{ts:08d}.png")
-            cv2.imwrite(filename, frame)
+            filename = os.path.join(output_dir, f"{ts:08d}.jpg")
+            cv2.imwrite(filename, frame, [cv2.IMWRITE_JPEG_QUALITY, 80])
             saved_count += 1
 
         frame_count += 1
@@ -74,6 +74,6 @@ def extract_frames_16fps(video_path, output_folder, target_fps=16):
     print(f"Saved {saved_count} frames to {output_dir}")
 
 if __name__ == "__main__":
-    video_path = "walking.mov"
+    video_path = "brahim1.mov"
     output_folder = video_path.split('.')[0]
     extract_frames_16fps(video_path, output_folder)
